@@ -16,12 +16,12 @@ const Navbar = () => {
             </li>
             <li>
                 <NavLink 
-                    to="/about" 
+                    to="/register" 
                     className={({ isActive }) => 
                         `font-medium transition-all duration-300 ${isActive ? 'text-primary bg-primary/10' : 'hover:text-primary'}`
                     }
                 >
-                    About
+                    Register
                 </NavLink>
             </li>
             <li>
