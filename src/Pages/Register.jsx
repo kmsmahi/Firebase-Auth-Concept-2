@@ -1,7 +1,9 @@
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { auth } from '../FireBase/FireBase.config';
-import React from 'react';
+import React, { useState } from 'react';
 const Register = () => {
+    const [error,setError]=useState('');
+    const [success,setSuccess]=useState('');
     const registerHandler=(e)=>{
         e.preventDefault();
         console.log('Register button clicked',
@@ -12,13 +14,23 @@ const Register = () => {
         const auth = getAuth();
         const email = e.target.email.value;
         const password = e.target.password.value;
+        setError('');
+        setSuccess(false);
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        if(!passwordRegex.test(password)){
+          setError("Password must be at least 6 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+          return;
+        }
         createUserWithEmailAndPassword(auth, email, password)
        .then((result) => {
         console.log('after creation : ',result.user);
+        setSuccess(true);
+        e.target.reset();
        })
       .catch((err) => {
         console.error('Firebase Error Code:', err.code);
                 console.error('Firebase Error Message:', err.message);
+                setError(err.message);
       });
     }
     return (
@@ -38,6 +50,12 @@ const Register = () => {
           <div><a className="link link-hover">Forgot password?</a></div>
           <button className="btn btn-neutral mt-4">Register</button>
         </fieldset>
+        {
+          success && <p className='text-green-500'>User created successfully!</p>
+        }
+        {
+          error && <p className='text-red-500'>{error}</p>
+        }
        </form>
       </div>
     </div>
